@@ -1,0 +1,91 @@
+<main class="collection-page">
+  <section class="collection-hero section-shell">
+    <div>
+      <p class="eyebrow">Collections Tableau Tendance</p>
+      <h1>Des collections claires pour choisir le tableau ideal.</h1>
+      <p class="hero-lede">
+        Explorez les univers Tableau Tendance: modernes, abstraits, calligraphie arabe, nature, animaux et paysages.
+      </p>
+      <div class="collection-actions">
+        <a class="button button-primary" routerLink="/boutique">Voir les tableaux</a>
+        <a class="button button-secondary" href="https://wa.me/21600000000">WhatsApp</a>
+      </div>
+    </div>
+
+    <aside class="collection-summary-card">
+      <span>Selection premium</span>
+      <strong>{{ collections().length }} collections</strong>
+      <p>Les prix sont transparents et la commande se fait simplement avec paiement a la livraison.</p>
+    </aside>
+  </section>
+
+  <section class="section-shell collection-content">
+    <div class="collection-toolbar">
+      <div>
+        <p class="eyebrow">Catalogue collections</p>
+        <h2>{{ filteredCollections().length }} collections</h2>
+      </div>
+
+      <div class="collection-tabs" aria-label="Filtrer les collections">
+        @for (category of categories(); track category) {
+          <button
+            type="button"
+            [class.is-active]="category === selectedCategory()"
+            (click)="selectCategory(category)"
+          >
+            {{ category }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="collection-grid">
+      @for (collection of filteredCollections(); track collection.title) {
+        <article class="collection-card">
+          <img [src]="collection.image" [alt]="collection.title" loading="lazy" />
+          <div class="collection-card-body">
+            <span>{{ collection.category }}</span>
+            <h3>{{ collection.title }}</h3>
+            <p>{{ collection.description }}</p>
+            <dl>
+              <div>
+                <dt>Disponibilite</dt>
+                <dd>{{ collection.duration }}</dd>
+              </div>
+              <div>
+                <dt>Prix</dt>
+                <dd>{{ collection.price }}</dd>
+              </div>
+            </dl>
+            <a class="button button-secondary" routerLink="/boutique">Voir</a>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section class="collection-process section-shell">
+    <div>
+      <p class="eyebrow">Avant de commander</p>
+      <h2>Un achat simple, lisible et confortable.</h2>
+    </div>
+    <div class="process-grid">
+      <article>
+        <span>01</span>
+        <h3>Choix</h3>
+        <p>Vous choisissez la reference et le style qui correspond a votre interieur.</p>
+      </article>
+      <article>
+        <span>02</span>
+        <h3>Commande</h3>
+        <p>La commande est preparee avec soin avant la livraison.</p>
+      </article>
+      <article>
+        <span>03</span>
+        <h3>Livraison</h3>
+        <p>Vous payez simplement a la livraison partout en Tunisie.</p>
+      </article>
+    </div>
+  </section>
+</main>
+

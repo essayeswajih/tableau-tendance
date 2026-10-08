@@ -1,0 +1,92 @@
+@use '../dashboard-section';
+
+.dashboard-success {
+  background: #ecfdf3;
+  border-bottom: 1px solid #bbf7d0;
+  color: var(--success);
+  font-weight: 800;
+  margin: 0;
+  padding: 14px 24px;
+}
+
+.clients-filters {
+  grid-template-columns: 1fr;
+}
+
+.merge-panel {
+  align-items: end;
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  gap: 14px;
+  grid-template-columns: 1.2fr 1fr 1fr auto;
+  padding: 18px 24px;
+}
+
+.merge-panel > div {
+  display: grid;
+  gap: 4px;
+}
+
+.merge-panel span {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.merge-panel input {
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  min-height: 42px;
+  padding: 0 12px;
+}
+
+.merge-panel button,
+.client-actions button {
+  background: var(--background-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: 800;
+  min-height: 42px;
+  padding: 0 12px;
+}
+
+.merge-panel button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.edit-panel {
+  background: #fff7ed;
+}
+
+.clients-table-row {
+  grid-template-columns: 80px 1.4fr 1fr 1.2fr 1fr;
+}
+
+.clients-table-row > span {
+  display: grid;
+  gap: 5px;
+}
+
+.clients-table-row input[type='checkbox'] {
+  height: 20px;
+  width: 20px;
+}
+
+.client-actions {
+  align-content: center;
+}
+
+.client-actions small {
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+@media (max-width: 820px) {
+  .merge-panel,
+  .clients-table-row {
+    grid-template-columns: 1fr;
+  }
+}

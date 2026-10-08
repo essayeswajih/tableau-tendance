@@ -1,0 +1,110 @@
+<main class="contact-page">
+  <section class="contact-hero section-shell">
+    <div>
+      <p class="eyebrow">Contact Tableau Tendance</p>
+      <h1>Une question, une commande, un conseil produit ?</h1>
+      <p class="hero-lede">
+        Contactez le salon directement ou laissez-nous un message. Nous vous
+        repondrons avec les informations utiles pour preparer votre visite.
+      </p>
+      <div class="contact-actions">
+        <a class="button button-primary" [href]="settingsService.phoneHref()">Appeler le salon</a>
+        <a class="button button-secondary" [href]="settingsService.whatsappHref()">WhatsApp</a>
+      </div>
+    </div>
+
+    <aside class="contact-summary-card">
+      <span>{{ settingsService.isOpenToday() ? "Ouvert aujourd'hui" : "Ferme aujourd'hui" }}</span>
+      <strong>{{ settingsService.todayHoursLabel() }}</strong>
+      <p>{{ settingsService.settings().salon_info.address }}</p>
+    </aside>
+  </section>
+
+  <section class="contact-grid section-shell">
+    <div class="contact-panel">
+      <p class="eyebrow">Coordonnées</p>
+      <h2>Parlez-nous de votre besoin.</h2>
+
+      <div class="contact-methods">
+        <a [href]="settingsService.phoneHref()">
+          <span>Téléphone</span>
+          <strong>{{ settingsService.settings().salon_info.phone }}</strong>
+        </a>
+        <a [href]="settingsService.whatsappHref()">
+          <span>WhatsApp</span>
+          <strong>Message rapide</strong>
+        </a>
+        <a [href]="'mailto:' + settingsService.settings().salon_info.email">
+          <span>Email</span>
+          <strong>{{ settingsService.settings().salon_info.email }}</strong>
+        </a>
+      </div>
+
+      <div class="hours-card">
+        <h3>Horaires</h3>
+        <dl>
+          @for (item of settingsService.settings().opening_hours; track item.day) {
+            <div>
+              <dt>{{ item.day }}</dt>
+              <dd>{{ settingsService.hoursLabel(item) }}</dd>
+            </div>
+          }
+        </dl>
+      </div>
+    </div>
+
+    <form class="contact-form" aria-label="Formulaire de contact" [formGroup]="contactForm" (ngSubmit)="submitMessage()">
+      <div class="form-row">
+        <label>
+          <span>Nom complet</span>
+          <input type="text" formControlName="customer_name" autocomplete="name" placeholder="Votre nom" />
+        </label>
+        <label>
+          <span>Téléphone</span>
+          <input type="tel" formControlName="customer_phone" autocomplete="tel" placeholder="+216 ..." />
+        </label>
+      </div>
+
+      <label>
+        <span>Email</span>
+        <input type="email" formControlName="customer_email" autocomplete="email" placeholder="vous@email.com" />
+      </label>
+
+      <label>
+        <span>Sujet</span>
+        <select formControlName="subject">
+          <option>Réservation decoration</option>
+          <option>Conseil produit</option>
+          <option>Demande générale</option>
+        </select>
+      </label>
+
+      <label>
+        <span>Message</span>
+        <textarea formControlName="message" rows="6" placeholder="Expliquez-nous votre besoin..."></textarea>
+      </label>
+
+      @if (successMessage()) {
+        <p class="form-note is-success">{{ successMessage() }}</p>
+      }
+      @if (errorMessage()) {
+        <p class="form-note is-error">{{ errorMessage() }}</p>
+      }
+
+      <button class="button button-primary" type="submit" [disabled]="isSubmitting()">
+        {{ isSubmitting() ? 'Envoi...' : 'Envoyer le message' }}
+      </button>
+    </form>
+  </section>
+
+  <section class="map-section section-shell">
+    <div class="map-placeholder" aria-label="Emplacement Tableau Tendance">
+      <div>
+        <span>Tableau Tendance</span>
+        <strong>{{ settingsService.settings().salon_info.address }}</strong>
+        <p>{{ settingsService.settings().branding.short_description }}</p>
+      </div>
+    </div>
+  </section>
+</main>
+

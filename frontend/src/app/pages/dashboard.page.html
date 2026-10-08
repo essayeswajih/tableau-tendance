@@ -1,0 +1,72 @@
+<main class="dashboard-page">
+  <aside class="admin-sidebar" aria-label="Navigation administration">
+    <div class="sidebar-brand">
+      <img class="brand-logo" src="/uploads/tableau-tendance-logo.png" alt="" />
+      <div>
+        <strong>Tableau Tendance</strong>
+        <small>Admin</small>
+      </div>
+    </div>
+
+    <nav>
+      @for (section of adminSections; track section.key) {
+        <button
+          type="button"
+          [class.is-active]="activeSection() === section.key"
+          (click)="selectSection(section.key)"
+        >
+          {{ section.label }}
+        </button>
+      }
+    </nav>
+
+    <div class="sidebar-footer">
+      <small>{{ profile()?.email || 'admin' }}</small>
+      <button type="button" (click)="auth.logout()">Deconnexion</button>
+    </div>
+  </aside>
+
+  <section class="dashboard-content">
+    <section class="dashboard-head">
+      <div>
+        <p class="eyebrow">Dashboard</p>
+        <h1>Administration Tableau Tendance</h1>
+        <p>Gerez la boutique depuis un seul espace.</p>
+      </div>
+    </section>
+
+    @switch (activeSection()) {
+      @case ('overview') {
+        <app-dashboard-stats-page />
+      }
+      @case ('services') {
+        <app-dashboard-services-page />
+      }
+      @case ('shop') {
+        <app-dashboard-products-page />
+      }
+      @case ('orders') {
+        <app-dashboard-orders-page />
+      }
+      @case ('uploads') {
+        <app-dashboard-uploads-page />
+      }
+      @case ('gallery') {
+        <app-dashboard-gallery-page />
+      }
+      @case ('messages') {
+        <app-dashboard-messages-page />
+      }
+      @case ('customers') {
+        <app-dashboard-clients-page />
+      }
+      @case ('settings') {
+        <app-dashboard-settings-page />
+      }
+      @default {
+        <app-dashboard-placeholder-page [section]="activeSection()" />
+      }
+    }
+  </section>
+</main>
+

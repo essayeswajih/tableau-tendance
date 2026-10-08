@@ -1,0 +1,76 @@
+.login-page {
+  background: var(--background-soft);
+  min-height: calc(100vh - 160px);
+}
+
+.login-shell {
+  display: grid;
+  gap: 48px;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  margin-inline: auto;
+  max-width: 1120px;
+  padding: 96px 32px;
+}
+
+.login-copy {
+  align-self: center;
+}
+
+.login-copy a {
+  color: var(--primary);
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.login-panel {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  display: grid;
+  gap: 22px;
+  padding: 32px;
+}
+
+.login-panel h2 {
+  font-size: 30px;
+  margin-bottom: 6px;
+}
+
+.login-panel label {
+  display: grid;
+  gap: 8px;
+}
+
+.login-panel label span {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.login-panel input {
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  min-height: 48px;
+  padding: 0 14px;
+}
+
+.login-panel button:disabled {
+  cursor: wait;
+  opacity: 0.7;
+}
+
+.form-error {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  border-radius: 12px;
+  color: #9f1239;
+  margin: 0;
+  padding: 12px 14px;
+}
+
+@media (max-width: 860px) {
+  .login-shell {
+    grid-template-columns: 1fr;
+    padding: 72px 18px;
+  }
+}

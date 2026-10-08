@@ -1,0 +1,107 @@
+<section class="dashboard-panel">
+  <div class="panel-head">
+    <h2>Reservations</h2>
+    <div class="panel-actions">
+      <span>{{ isLoading() ? 'Chargement...' : reservations().length + ' demandes' }}</span>
+      <button type="button" (click)="loadReservations()">Actualiser</button>
+    </div>
+  </div>
+
+  @if (reservationsError()) {
+    <p class="dashboard-error">{{ reservationsError() }}</p>
+  }
+
+  <div class="dashboard-filters reservations-filters" aria-label="Filtres reservations">
+    <label>
+      <span>Recherche</span>
+      <input
+        type="search"
+        placeholder="Nom, telephone, service..."
+        [value]="searchTerm()"
+        (input)="updateSearch($event)"
+      />
+    </label>
+    <label>
+      <span>Statut</span>
+      <select [value]="statusFilter()" (change)="updateStatusFilter($event)">
+        <option value="all">Tous les statuts</option>
+        @for (status of statusOptions; track status.value) {
+          <option [value]="status.value">{{ status.label }}</option>
+        }
+      </select>
+    </label>
+    <label>
+      <span>Service</span>
+      <select [value]="serviceFilter()" (change)="updateServiceFilter($event)">
+        <option value="all">Tous les services</option>
+        @for (service of uniqueServices(); track service) {
+          <option [value]="service">{{ service }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  <div>
+    <div class="table-row table-header reservations-table-row">
+      <span>Client</span>
+      <span>Service</span>
+      <span>Date</span>
+      <span>Statut</span>
+      <span>Action</span>
+    </div>
+
+    @for (reservation of paginatedReservations(); track reservation.id) {
+      <div class="table-row reservations-table-row">
+        <span>
+          <strong>{{ reservation.customer_name }}</strong>
+          <small>{{ reservation.customer_phone }} · {{ reservation.notes || 'Aucune note' }}</small>
+        </span>
+        <span>{{ reservation.service }}</span>
+        <span>{{ reservation.reservation_time | date: 'medium' }}</span>
+        <span>
+          <mark
+            class="status-badge"
+            [class.en-attente]="reservation.status === 'en_attente'"
+            [class.confirme]="reservation.status === 'confirme'"
+            [class.annulee]="reservation.status === 'annulee'"
+            [class.autre-horaire]="reservation.status === 'autre_horaire'"
+          >
+            {{ statusLabel(reservation.status) }}
+          </mark>
+        </span>
+        <span>
+          <select
+            class="status-select"
+            [value]="reservation.status"
+            (change)="updateReservationStatus(reservation, $event)"
+            aria-label="Modifier le statut"
+          >
+            @for (status of statusOptions; track status.value) {
+              <option [value]="status.value">{{ status.label }}</option>
+            }
+          </select>
+        </span>
+      </div>
+    } @empty {
+      <div class="empty-state">
+        <strong>Aucune reservation trouvee</strong>
+        <p>Essayez de modifier les filtres ou actualisez la liste.</p>
+      </div>
+    }
+  </div>
+
+  <div class="pagination-bar">
+    <span>
+      Page {{ currentPage() }} / {{ totalPages() }} ·
+      {{ filteredReservations().length }} resultat(s)
+    </span>
+    <div>
+      <button type="button" [disabled]="currentPage() === 1" (click)="goToPreviousPage()">
+        Precedent
+      </button>
+      <button type="button" [disabled]="currentPage() === totalPages()" (click)="goToNextPage()">
+        Suivant
+      </button>
+    </div>
+  </div>
+</section>

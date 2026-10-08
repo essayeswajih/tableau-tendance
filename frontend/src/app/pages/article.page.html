@@ -1,0 +1,130 @@
+<main class="article-page">
+  @if (product(); as product) {
+    <nav class="article-breadcrumb section-shell" aria-label="Fil d'Ariane">
+      <a routerLink="/">Accueil</a>
+      <span>/</span>
+      <a routerLink="/boutique">Nos tableaux</a>
+      <span>/</span>
+      <strong>{{ product.title }}</strong>
+    </nav>
+
+    <section class="article-hero section-shell">
+      <div class="article-gallery">
+        <div class="main-image">
+          @if (product.badge) {
+            <span class="badge">{{ product.badge }}</span>
+          }
+          <img [src]="product.image" [alt]="product.title" />
+        </div>
+        <div class="thumb-row" aria-label="Apercus">
+          <img [src]="product.image" [alt]="product.title" />
+          <img [src]="product.image" [alt]="product.title + ' detail'" />
+          <img [src]="product.image" [alt]="product.title + ' ambiance'" />
+        </div>
+      </div>
+
+      <article class="article-info">
+        <p class="eyebrow">{{ product.category }}</p>
+        <h1>{{ product.title }}</h1>
+        <div class="rating-line" aria-label="Note 5 etoiles">
+          <span>★★★★★</span>
+          <strong>4.9</strong>
+          <small>Clients satisfaits</small>
+        </div>
+        <p class="article-lede">
+          Tableau decoratif premium pour sublimer salon, chambre, bureau ou espace professionnel.
+          Une piece murale elegante avec livraison partout en Tunisie et paiement a la livraison.
+        </p>
+
+        <div class="price-box">
+          <span>Prix</span>
+          <strong>{{ product.price }}</strong>
+          <p>{{ settingsService.settings().boutique.payment_note }}</p>
+        </div>
+
+        <div class="quantity-row" aria-label="Quantite">
+          <span>Quantite</span>
+          <div class="quantity-control">
+            <button type="button" aria-label="Diminuer la quantite" (click)="decreaseQuantity()">−</button>
+            <strong>{{ quantity() }}</strong>
+            <button type="button" aria-label="Augmenter la quantite" (click)="increaseQuantity()">+</button>
+          </div>
+        </div>
+
+        <div class="article-actions">
+          <button
+            class="button button-primary"
+            type="button"
+            [disabled]="!settingsService.settings().boutique.orders_enabled"
+            (click)="addToCart(product)"
+          >
+            Ajouter au panier
+          </button>
+          <a class="button button-secondary" routerLink="/contact">Demander conseil</a>
+        </div>
+
+        <dl class="article-details">
+          <div>
+            <dt>Livraison</dt>
+            <dd>Partout en Tunisie</dd>
+          </div>
+          <div>
+            <dt>Paiement</dt>
+            <dd>A la livraison</dd>
+          </div>
+          <div>
+            <dt>Style</dt>
+            <dd>{{ product.category }}</dd>
+          </div>
+          <div>
+            <dt>Reference</dt>
+            <dd>{{ product.title }}</dd>
+          </div>
+        </dl>
+      </article>
+    </section>
+
+    <section class="article-benefits section-shell" aria-label="Avantages">
+      <article>
+        <strong>Qualite premium</strong>
+        <p>Visuel decoratif soigne pour une ambiance moderne et chaleureuse.</p>
+      </article>
+      <article>
+        <strong>Commande simple</strong>
+        <p>Ajoutez au panier et confirmez votre commande en quelques etapes.</p>
+      </article>
+      <article>
+        <strong>Conseil decoration</strong>
+        <p>Contactez-nous pour choisir la reference adaptee a votre mur.</p>
+      </article>
+    </section>
+
+    <section class="related-section section-shell">
+      <div class="section-heading with-link">
+        <div>
+          <p class="eyebrow">Suggestions</p>
+          <h2>Autres tableaux</h2>
+        </div>
+        <a class="text-link" routerLink="/boutique">Voir la boutique →</a>
+      </div>
+
+      <div class="products-grid related-grid">
+        @for (item of displayedRelatedProducts(); track item.title) {
+          <article class="product-card">
+            <a class="product-image" [routerLink]="articlePath(item)">
+              <img [src]="item.image" [alt]="item.title" loading="lazy" />
+            </a>
+            <div class="product-info">
+              <span>{{ item.category }}</span>
+              <h3><a [routerLink]="articlePath(item)">{{ item.title }}</a></h3>
+              <div class="product-row">
+                <strong>{{ item.price }}</strong>
+                <a class="text-link" [routerLink]="articlePath(item)">Voir</a>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+    </section>
+  }
+</main>

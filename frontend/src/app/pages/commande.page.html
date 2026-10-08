@@ -1,0 +1,187 @@
+<main class="commande-page">
+  <section class="commande-hero section-shell">
+    <div>
+      <p class="eyebrow">Commande Tableau Tendance</p>
+      <h1>Choisissez votre tableau et vos informations de livraison.</h1>
+      <p class="hero-lede">
+        Selectionnez une reference, laissez vos coordonnees, puis notre equipe
+        vous contacte pour confirmer la livraison.
+      </p>
+    </div>
+
+    <aside class="order-status-card">
+      <span>Commande</span>
+      <strong>{{ selectedDate()?.value || '-' }} a {{ selectedTime() || '-' }}</strong>
+      <p>{{ selectedCollection()?.title || 'Reference a choisir' }} · {{ selectedCollection()?.duration || '-' }}</p>
+    </aside>
+  </section>
+
+  @if (!settingsService.settings().reservation.reservations_enabled) {
+    <section class="empty-cart section-shell">
+      <p class="eyebrow">Commandes fermees</p>
+      <h2>Les commandes en ligne sont temporairement desactivees.</h2>
+      <p>Contactez-nous directement sur WhatsApp pour commander.</p>
+    </section>
+  } @else {
+  <section class="order-layout section-shell">
+    <div class="order-panel">
+      <nav class="order-stepper" aria-label="Etapes de commande">
+        @for (step of steps; track step; let index = $index) {
+          <button
+            type="button"
+            [class.is-active]="currentStep() === index + 1"
+            (click)="goToStep(index + 1)"
+          >
+            <span>{{ index + 1 }}</span>
+            {{ step }}
+          </button>
+        }
+      </nav>
+
+      <div class="order-navigation">
+        <button class="button button-secondary" type="button" [class.is-hidden]="currentStep() === 1" (click)="previousStep()">
+          Precedent
+        </button>
+        @if (currentStep() < steps.length) {
+          <button class="button button-primary" type="button" (click)="goToNextStep()">
+            {{ currentStep() === 4 ? 'Confirmation' : 'Suivant' }}
+          </button>
+        } @else {
+          <button class="button button-primary" type="button" [disabled]="isSubmitting()" (click)="submitOrder()">
+            {{ isSubmitting() ? 'Envoi...' : 'Confirmer la demande' }}
+          </button>
+        }
+      </div>
+
+      @if (currentStep() === 1) {
+      <section class="order-section">
+        <div class="section-heading">
+          <p class="eyebrow">1. Tableau</p>
+          <h2>Selectionnez une collection</h2>
+        </div>
+        <div class="collection-choice-grid">
+          @for (collection of collections(); track collection.title) {
+            <button
+              type="button"
+              class="collection-choice"
+              [class.is-selected]="collection.title === selectedCollection()?.title"
+              (click)="selectCollection(collection)"
+            >
+              <span>{{ collection.category }}</span>
+              <strong>{{ collection.title }}</strong>
+              <small>{{ collection.duration }} · {{ collection.price }}</small>
+            </button>
+          }
+        </div>
+      </section>
+      }
+
+      @if (currentStep() === 2) {
+      <section class="order-section">
+        <div class="section-heading">
+          <p class="eyebrow">2. Livraison</p>
+          <h2>Choisissez le jour souhaite</h2>
+        </div>
+        <div class="date-grid">
+          @for (date of dates(); track date.value) {
+            <button type="button" [disabled]="date.disabled" [class.is-selected]="date.value === selectedDate()?.value" (click)="selectDate(date)">
+              <span>{{ date.label }}</span>
+              <strong>{{ date.value }}</strong>
+            </button>
+          }
+        </div>
+      </section>
+      }
+
+      @if (currentStep() === 3) {
+      <section class="order-section">
+        <div class="section-heading">
+          <p class="eyebrow">3. Moment</p>
+          <h2>Moments disponibles</h2>
+        </div>
+        <div class="time-grid">
+          @for (time of times(); track time) {
+            <button type="button" [class.is-selected]="time === selectedTime()" (click)="selectTime(time)">
+              {{ time }}
+            </button>
+          }
+        </div>
+      </section>
+      }
+
+      @if (currentStep() === 4) {
+      <section class="order-section">
+        <div class="section-heading">
+          <p class="eyebrow">4. Informations</p>
+          <h2>Vos coordonnees</h2>
+        </div>
+        <form class="order-form" [formGroup]="form" (ngSubmit)="submitOrder()">
+          <div class="form-row">
+            <label>
+              <span>Nom complet</span>
+              <input type="text" formControlName="customer_name" placeholder="Votre nom" autocomplete="name" />
+            </label>
+            <label>
+              <span>Telephone</span>
+              <input type="tel" formControlName="customer_phone" placeholder="+216 ..." autocomplete="tel" />
+            </label>
+          </div>
+          <label>
+            <span>Email</span>
+            <input type="email" formControlName="customer_email" placeholder="vous@email.com" autocomplete="email" />
+          </label>
+          <label>
+            <span>Notes</span>
+            <textarea rows="4" formControlName="notes" placeholder="Reference, dimension, adresse ou demande particuliere..."></textarea>
+          </label>
+        </form>
+      </section>
+      }
+
+      @if (currentStep() === 5) {
+      <section class="order-section confirmation-step">
+        <div class="section-heading">
+          <p class="eyebrow">5. Confirmation</p>
+          <h2>Verifiez votre commande</h2>
+        </div>
+        <p>Relisez votre commande dans le resume, puis confirmez l'envoi de la demande.</p>
+      </section>
+      }
+    </div>
+
+    <aside class="order-summary">
+      <p class="eyebrow">Resume</p>
+      <h2>Votre commande</h2>
+      <dl>
+        <div>
+          <dt>Tableau</dt>
+          <dd>{{ summary().collection }}</dd>
+        </div>
+        <div>
+          <dt>Livraison</dt>
+          <dd>{{ summary().date }}</dd>
+        </div>
+        <div>
+          <dt>Moment</dt>
+          <dd>{{ summary().time }}</dd>
+        </div>
+        <div>
+          <dt>Disponibilite</dt>
+          <dd>{{ summary().availability }}</dd>
+        </div>
+        <div>
+          <dt>Prix</dt>
+          <dd>{{ summary().price }}</dd>
+        </div>
+      </dl>
+      @if (successMessage()) {
+        <p class="order-alert is-success">{{ successMessage() }}</p>
+      }
+      @if (errorMessage()) {
+        <p class="order-alert is-error">{{ errorMessage() }}</p>
+      }
+      <p>Votre commande sera visible dans le dashboard admin apres envoi.</p>
+    </aside>
+  </section>
+  }
+</main>

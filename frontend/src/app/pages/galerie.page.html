@@ -1,0 +1,60 @@
+<main class="gallery-page">
+  <section class="gallery-hero section-shell">
+    <div>
+      <p class="eyebrow">Galerie Tableau Tendance</p>
+      <h1>Ambiance salon, decorations et rituels beauté.</h1>
+      <p class="hero-lede">
+        Une selection visuelle pour decouvrir l'esprit Tableau Tendance: propre,
+        feminin, calme et soigne jusque dans les details.
+      </p>
+    </div>
+
+    @if (selectedImage()) {
+    <figure class="featured-preview">
+      <img [src]="selectedImage()?.src" [alt]="selectedImage()?.alt" />
+      <figcaption>
+        <span>{{ selectedImage()?.category }}</span>
+        <strong>{{ selectedImage()?.caption }}</strong>
+      </figcaption>
+    </figure>
+    }
+  </section>
+
+  <section class="section-shell gallery-content">
+    <div class="gallery-toolbar">
+      <div>
+        <p class="eyebrow">Photos</p>
+        <h2>{{ filteredGallery().length }} images</h2>
+      </div>
+
+      <div class="gallery-tabs" aria-label="Filtrer la galerie">
+        @for (category of categories; track category) {
+          <button
+            type="button"
+            [class.is-active]="category === selectedCategory()"
+            (click)="selectCategory(category)"
+          >
+            {{ category }}
+          </button>
+        }
+      </div>
+    </div>
+
+    <div class="gallery-masonry">
+      @for (image of filteredGallery(); track image.src) {
+        <button
+          type="button"
+          class="gallery-card"
+          [class.is-selected]="image.src === selectedImage()?.src"
+          [attr.aria-label]="image.alt"
+          (click)="selectImage(image)"
+        >
+          <img [src]="image.src" [alt]="image.alt" loading="lazy" />
+          <span>{{ image.category }}</span>
+          <strong>{{ image.caption }}</strong>
+        </button>
+      }
+    </div>
+  </section>
+</main>
+

@@ -1,0 +1,54 @@
+@use '../dashboard-section';
+
+.messages-filters {
+  grid-template-columns: 1.6fr 0.8fr;
+}
+
+.messages-table-row {
+  grid-template-columns: 1.2fr 0.9fr 1.5fr 0.7fr 1fr;
+}
+
+.message-body {
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.message-actions {
+  display: grid;
+  gap: 10px;
+}
+
+.message-actions button {
+  background: var(--background-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: 800;
+  min-height: 38px;
+  padding: 0 12px;
+}
+
+.status-select {
+  width: 100%;
+}
+
+.status-badge.nouveau {
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.status-badge.lu {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.status-badge.repondu {
+  background: #ecfdf3;
+  color: var(--success);
+}
+
+.status-badge.archive {
+  background: #f4f4f5;
+  color: #52525b;
+}

@@ -1,0 +1,206 @@
+.dashboard-panel {
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  margin: 24px auto 0;
+  max-width: 1180px;
+  overflow: hidden;
+}
+
+.panel-head {
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  padding: 24px;
+}
+
+.panel-head h2 {
+  font-size: 28px;
+  margin: 0;
+}
+
+.panel-actions {
+  align-items: center;
+  display: flex;
+  gap: 12px;
+}
+
+.panel-actions span,
+.table-row small {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.panel-actions button,
+.row-actions button {
+  background: var(--background-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: 800;
+  min-height: 38px;
+  padding: 0 12px;
+}
+
+.dashboard-error {
+  background: #fff1f2;
+  border-bottom: 1px solid #fecdd3;
+  color: #9f1239;
+  font-weight: 700;
+  margin: 0;
+  padding: 14px 24px;
+}
+
+.dashboard-filters {
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  gap: 14px;
+  padding: 18px 24px;
+}
+
+.dashboard-filters label {
+  display: grid;
+  gap: 8px;
+}
+
+.dashboard-filters label span {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.dashboard-filters input,
+.dashboard-filters select,
+.status-select,
+.form-grid input,
+.form-grid textarea {
+  background: #fff;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  min-height: 42px;
+  padding: 0 12px;
+}
+
+.table-row {
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  gap: 18px;
+  padding: 18px 24px;
+}
+
+.table-row:last-child {
+  border-bottom: 0;
+}
+
+.table-header {
+  background: var(--background-soft);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.table-row span:first-child {
+  display: grid;
+  gap: 4px;
+}
+
+.status-badge {
+  border-radius: 999px;
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 900;
+  justify-content: center;
+  min-width: 112px;
+  padding: 7px 10px;
+}
+
+.status-badge.en-attente,
+.status-badge.nouvelle {
+  background: #fff7ed;
+  color: #9a3412;
+}
+
+.status-badge.confirme,
+.status-badge.confirmee,
+.status-badge.livree {
+  background: #ecfdf3;
+  color: var(--success);
+}
+
+.status-badge.annulee {
+  background: #fff1f2;
+  color: #9f1239;
+}
+
+.status-badge.autre-horaire,
+.status-badge.en-preparation {
+  background: #eff6ff;
+  color: #1d4ed8;
+}
+
+.pagination-bar {
+  align-items: center;
+  display: flex;
+  gap: 16px;
+  justify-content: space-between;
+  padding: 18px 24px;
+}
+
+.pagination-bar span {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.pagination-bar div {
+  display: flex;
+  gap: 10px;
+}
+
+.pagination-bar button {
+  background: #fff;
+  border: 1px solid var(--border-strong);
+  border-radius: 12px;
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: 800;
+  min-height: 40px;
+  padding: 0 14px;
+}
+
+.pagination-bar button:disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.empty-state {
+  padding: 34px 24px;
+}
+
+.empty-state p {
+  margin-bottom: 0;
+}
+
+@media (max-width: 820px) {
+  .dashboard-filters,
+  .table-row {
+    grid-template-columns: 1fr !important;
+  }
+
+  .pagination-bar {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .table-header {
+    display: none;
+  }
+}

@@ -1,0 +1,147 @@
+<section class="dashboard-panel">
+  <div class="panel-head">
+    <h2>Galerie</h2>
+    <div class="panel-actions">
+      <span>{{ filteredGalleryImages().length }} / {{ galleryImages().length }} image(s)</span>
+      <button type="button" (click)="loadGalleryImages()">Actualiser</button>
+    </div>
+  </div>
+
+  @if (galleryError()) {
+    <p class="dashboard-error">{{ galleryError() }}</p>
+  }
+
+  <form class="gallery-form" [formGroup]="galleryForm" (ngSubmit)="saveImage()">
+    <div class="form-head">
+      <div>
+        <strong>{{ editingImageId() ? 'Modifier l image' : 'Nouvelle image' }}</strong>
+        <span>Controlez les images visibles sur la page Galerie publique.</span>
+      </div>
+      <button type="button" (click)="startCreateImage()">Nouveau</button>
+    </div>
+
+    <div class="form-grid">
+      <label class="wide-field">
+        <span>Image URL</span>
+        <input type="text" formControlName="src" placeholder="/uploads/image.jpg" />
+      </label>
+      <label>
+        <span>Categorie</span>
+        <select formControlName="category">
+          @for (category of categories; track category) {
+            <option [value]="category">{{ category }}</option>
+          }
+        </select>
+      </label>
+      <label>
+        <span>Ordre</span>
+        <input type="number" formControlName="display_order" />
+      </label>
+      <label class="full-field">
+        <span>Texte alternatif</span>
+        <input type="text" formControlName="alt" />
+      </label>
+      <label class="full-field">
+        <span>Legende</span>
+        <input type="text" formControlName="caption" />
+      </label>
+      <label class="toggle-field">
+        <input type="checkbox" formControlName="is_active" />
+        <span>Image visible</span>
+      </label>
+    </div>
+
+    <div class="image-picker">
+      <span>Images uploadées</span>
+      <div>
+        @for (upload of uploads(); track upload.filename) {
+          @if (upload.kind === 'image') {
+            <button type="button" (click)="useImage(upload)">
+              <img [src]="upload.url" [alt]="upload.filename" />
+            </button>
+          }
+        }
+      </div>
+    </div>
+
+    <button class="button button-primary" type="submit" [disabled]="isSavingImage()">
+      {{ isSavingImage() ? 'Sauvegarde...' : 'Sauvegarder l image' }}
+    </button>
+  </form>
+
+  <div class="dashboard-filters gallery-filters" aria-label="Filtres galerie">
+    <label>
+      <span>Recherche</span>
+      <input
+        type="search"
+        placeholder="Legende, categorie, image..."
+        [value]="gallerySearchTerm()"
+        (input)="updateGallerySearch($event)"
+      />
+    </label>
+    <label>
+      <span>Categorie</span>
+      <select [value]="galleryCategoryFilter()" (change)="updateGalleryCategoryFilter($event)">
+        @for (category of galleryCategories(); track category) {
+          <option [value]="category">
+            {{ category === 'all' ? 'Toutes les categories' : category }}
+          </option>
+        }
+      </select>
+    </label>
+    <label>
+      <span>Statut</span>
+      <select [value]="galleryStatusFilter()" (change)="updateGalleryStatusFilter($event)">
+        <option value="all">Tous les statuts</option>
+        <option value="active">Actives</option>
+        <option value="hidden">Masquees</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="gallery-admin-list">
+    @for (image of paginatedGalleryImages(); track image.id || image.src) {
+      <article class="gallery-admin-row">
+        <img [src]="image.src" [alt]="image.alt" />
+        <div>
+          <strong>{{ image.caption }}</strong>
+          <small>{{ image.category }} · ordre {{ image.display_order || 0 }}</small>
+          <p>{{ image.alt }}</p>
+        </div>
+        <span>{{ image.is_active ? 'Visible' : 'Masquee' }}</span>
+        <div class="row-actions">
+          <button type="button" (click)="startEditImage(image)">Modifier</button>
+          <button type="button" (click)="deleteImage(image)">Supprimer</button>
+        </div>
+      </article>
+    } @empty {
+      <div class="empty-state">
+        <strong>Aucune image</strong>
+        <p>Ajoutez une image pour alimenter la galerie publique.</p>
+      </div>
+    }
+  </div>
+
+  <div class="pagination-bar">
+    <span>
+      Page {{ galleryCurrentPage() }} / {{ galleryTotalPages() }} ·
+      {{ filteredGalleryImages().length }} resultat(s)
+    </span>
+    <div>
+      <button
+        type="button"
+        [disabled]="galleryCurrentPage() === 1"
+        (click)="goToPreviousGalleryPage()"
+      >
+        Precedent
+      </button>
+      <button
+        type="button"
+        [disabled]="galleryCurrentPage() === galleryTotalPages()"
+        (click)="goToNextGalleryPage()"
+      >
+        Suivant
+      </button>
+    </div>
+  </div>
+</section>

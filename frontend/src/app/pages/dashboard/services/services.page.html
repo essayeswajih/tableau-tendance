@@ -1,0 +1,101 @@
+<section class="dashboard-panel">
+  <div class="panel-head">
+    <h2>Services</h2>
+    <div class="panel-actions">
+      <span>{{ filteredServices().length }} / {{ services().length }} service(s)</span>
+      <button type="button" (click)="loadServices()">Actualiser</button>
+    </div>
+  </div>
+
+  @if (servicesError()) {
+    <p class="dashboard-error">{{ servicesError() }}</p>
+  }
+
+  <form class="service-form" [formGroup]="serviceForm" (ngSubmit)="saveService()">
+    <div class="form-head">
+      <div>
+        <strong>{{ editingServiceId() ? 'Modifier le service' : 'Nouveau service' }}</strong>
+        <span>Gardez les prestations claires pour faciliter la reservation.</span>
+      </div>
+      <button type="button" (click)="startCreateService()">Nouveau</button>
+    </div>
+
+    <div class="form-grid service-form-grid">
+      <label><span>Titre</span><input type="text" formControlName="title" /></label>
+      <label><span>Categorie</span><input type="text" formControlName="category" /></label>
+      <label><span>Duree</span><input type="text" formControlName="duration" placeholder="60 min" /></label>
+      <label><span>Prix</span><input type="text" formControlName="price" placeholder="A partir de 45 DT" /></label>
+      <label class="wide-field"><span>Image</span><input type="text" formControlName="image" placeholder="/uploads/image.jpg" /></label>
+      <label class="toggle-field"><input type="checkbox" formControlName="is_active" /><span>Service actif</span></label>
+      <label class="full-field"><span>Description</span><textarea rows="3" formControlName="description"></textarea></label>
+    </div>
+
+    <div class="image-picker">
+      <span>Images uploadées</span>
+      <div>
+        @for (upload of uploads(); track upload.filename) {
+          @if (upload.kind === 'image') {
+            <button type="button" (click)="useImageForService(upload)">
+              <img [src]="upload.url" [alt]="upload.filename" />
+            </button>
+          }
+        }
+      </div>
+    </div>
+
+    <button class="button button-primary" type="submit" [disabled]="isSavingService()">
+      {{ isSavingService() ? 'Sauvegarde...' : 'Sauvegarder le service' }}
+    </button>
+  </form>
+
+  <div class="dashboard-filters service-filters" aria-label="Filtres services">
+    <label>
+      <span>Recherche</span>
+      <input type="search" placeholder="Titre, categorie, prix..." [value]="serviceSearchTerm()" (input)="updateServiceSearch($event)" />
+    </label>
+    <label>
+      <span>Categorie</span>
+      <select [value]="serviceCategoryFilter()" (change)="updateServiceCategoryFilter($event)">
+        @for (category of serviceCategories(); track category) {
+          <option [value]="category">{{ category === 'all' ? 'Toutes les categories' : category }}</option>
+        }
+      </select>
+    </label>
+    <label>
+      <span>Statut</span>
+      <select [value]="serviceStatusFilter()" (change)="updateServiceStatusFilter($event)">
+        <option value="all">Tous les statuts</option>
+        <option value="active">Actifs</option>
+        <option value="hidden">Masques</option>
+      </select>
+    </label>
+  </div>
+
+  <div>
+    @for (service of paginatedServices(); track service.id || service.title) {
+      <article class="service-admin-row">
+        <img [src]="service.image" [alt]="service.title" />
+        <div>
+          <strong>{{ service.title }}</strong>
+          <small>{{ service.category }} · {{ service.duration }} · {{ service.price }}</small>
+          <p>{{ service.description }}</p>
+        </div>
+        <span>{{ service.is_active ? 'Actif' : 'Masque' }}</span>
+        <div class="row-actions">
+          <button type="button" (click)="startEditService(service)">Modifier</button>
+          <button type="button" (click)="deleteService(service)">Supprimer</button>
+        </div>
+      </article>
+    } @empty {
+      <div class="empty-state"><strong>Aucun service</strong><p>Ajoutez votre premiere prestation depuis le formulaire.</p></div>
+    }
+  </div>
+
+  <div class="pagination-bar">
+    <span>Page {{ serviceCurrentPage() }} / {{ serviceTotalPages() }} · {{ filteredServices().length }} resultat(s)</span>
+    <div>
+      <button type="button" [disabled]="serviceCurrentPage() === 1" (click)="goToPreviousServicePage()">Precedent</button>
+      <button type="button" [disabled]="serviceCurrentPage() === serviceTotalPages()" (click)="goToNextServicePage()">Suivant</button>
+    </div>
+  </div>
+</section>

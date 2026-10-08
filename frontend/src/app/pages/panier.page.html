@@ -1,0 +1,158 @@
+<main class="cart-page">
+  <section class="cart-hero section-shell">
+    <div>
+      <p class="eyebrow">Panier Tableau Tendance</p>
+      <h1>Vos produits sélectionnés.</h1>
+      <p class="hero-lede">
+        Vérifiez les quantités avant de passer à la commande. Les frais et
+        disponibilités définitifs seront confirmés au checkout.
+      </p>
+    </div>
+
+    <aside class="cart-status-card">
+      <span>Panier</span>
+      <strong>{{ itemCount() }} produit(s)</strong>
+      <p>Livraison estimée à confirmer avec vos coordonnées.</p>
+    </aside>
+  </section>
+
+  <section class="cart-layout section-shell">
+    @if (items().length > 0) {
+      <div class="cart-items" aria-label="Produits du panier">
+        @for (item of items(); track item.title) {
+          <article class="cart-item">
+            <img [src]="item.image" [alt]="item.title" />
+
+            <div class="cart-item-info">
+              <span>{{ item.category }}</span>
+              <h2>{{ item.title }}</h2>
+              <strong>{{ settingsService.formatMoney(item.unitPrice) }}</strong>
+            </div>
+
+            <div class="quantity-control" aria-label="Quantité">
+              <button type="button" aria-label="Diminuer" (click)="decreaseQuantity(item.title)">
+                -
+              </button>
+              <span>{{ item.quantity }}</span>
+              <button type="button" aria-label="Augmenter" (click)="increaseQuantity(item.title)">
+                +
+              </button>
+            </div>
+
+            <div class="line-total">
+              <span>Total</span>
+              <strong>{{ settingsService.formatMoney(item.unitPrice * item.quantity) }}</strong>
+            </div>
+
+            <button class="remove-button" type="button" (click)="removeItem(item.title)">
+              Retirer
+            </button>
+          </article>
+        }
+      </div>
+
+      <aside class="order-summary" aria-label="Résumé de commande">
+        <p class="eyebrow">Résumé</p>
+        <h2>Commande</h2>
+        <dl>
+          <div>
+            <dt>Sous-total</dt>
+            <dd>{{ settingsService.formatMoney(subtotal()) }}</dd>
+          </div>
+          <div>
+            <dt>Livraison estimée</dt>
+            <dd>{{ settingsService.formatMoney(deliveryFee()) }}</dd>
+          </div>
+          <div class="summary-total">
+            <dt>Total</dt>
+            <dd>{{ settingsService.formatMoney(total()) }}</dd>
+          </div>
+        </dl>
+        <button
+          class="button button-primary"
+          type="button"
+          [disabled]="!settingsService.settings().boutique.orders_enabled"
+          (click)="openCheckoutModal()"
+        >
+          Passer la commande
+        </button>
+        <a class="button button-secondary" routerLink="/boutique">Continuer mes achats</a>
+        <p>
+          {{ settingsService.settings().boutique.payment_note }}
+        </p>
+      </aside>
+    } @else {
+      <section class="empty-cart">
+        <p class="eyebrow">Panier vide</p>
+        <h2>Votre panier est vide.</h2>
+        <p>Découvrez les produits Tableau Tendance et ajoutez vos tableaux preferes.</p>
+        <a class="button button-primary" routerLink="/boutique">Voir la boutique</a>
+      </section>
+    }
+  </section>
+
+  @if (isCheckoutModalOpen()) {
+    <div class="modal-backdrop" aria-hidden="true" (click)="closeCheckoutModal()"></div>
+    <section
+      class="checkout-modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="checkout-title"
+    >
+      <header class="modal-header">
+        <div>
+          <p class="eyebrow">Confirmation</p>
+          <h2 id="checkout-title">Finaliser la commande</h2>
+        </div>
+        <button class="modal-close" type="button" aria-label="Annuler et fermer" (click)="closeCheckoutModal()">
+          ×
+        </button>
+      </header>
+
+      <form class="checkout-form" [formGroup]="checkoutForm" (ngSubmit)="submitOrder()">
+        <div class="form-row">
+          <label>
+            <span>Nom</span>
+            <input type="text" formControlName="nom" autocomplete="family-name" placeholder="Votre nom" />
+          </label>
+          <label>
+            <span>Prénom</span>
+            <input type="text" formControlName="prenom" autocomplete="given-name" placeholder="Votre prénom" />
+          </label>
+        </div>
+
+        <label>
+          <span>Adresse</span>
+          <input type="text" formControlName="adresse" autocomplete="street-address" placeholder="Adresse de livraison" />
+        </label>
+
+        <label>
+          <span>Téléphone</span>
+          <input type="tel" formControlName="telephone" autocomplete="tel" placeholder="+216 ..." />
+        </label>
+
+        @if (orderError()) {
+          <p class="checkout-message is-error">{{ orderError() }}</p>
+        }
+
+        @if (orderSuccess()) {
+          <p class="checkout-message is-success">{{ orderSuccess() }}</p>
+        }
+
+        <div class="modal-total">
+          <span>Total à confirmer</span>
+          <strong>{{ settingsService.formatMoney(total()) }}</strong>
+        </div>
+
+        <button
+          class="button button-primary"
+          type="submit"
+          [disabled]="isSubmittingOrder() || !settingsService.settings().boutique.orders_enabled"
+        >
+          {{ isSubmittingOrder() ? 'Envoi...' : 'Confirmer' }}
+        </button>
+      </form>
+    </section>
+  }
+</main>
+

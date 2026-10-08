@@ -1,0 +1,116 @@
+<section class="dashboard-panel">
+  <div class="panel-head">
+    <h2>Clients</h2>
+    <div class="panel-actions">
+      <span>{{ filteredClients().length }} / {{ clients().length }} client(s)</span>
+      <button type="button" (click)="loadClients()">Actualiser</button>
+    </div>
+  </div>
+
+  @if (clientsError()) {
+    <p class="dashboard-error">{{ clientsError() }}</p>
+  }
+
+  @if (clientsSuccess()) {
+    <p class="dashboard-success">{{ clientsSuccess() }}</p>
+  }
+
+  <div class="dashboard-filters clients-filters" aria-label="Filtres clients">
+    <label>
+      <span>Recherche</span>
+      <input
+        type="search"
+        placeholder="Nom, telephone, adresse, service, produit..."
+        [value]="searchTerm()"
+        (input)="updateSearch($event)"
+      />
+    </label>
+  </div>
+
+  <form class="merge-panel" [formGroup]="mergeForm" (ngSubmit)="mergeSelectedClients()">
+    <div>
+      <strong>Fusionner des clients</strong>
+      <span>{{ selectedPhones().length }} numero(s) selectionne(s)</span>
+    </div>
+    <input type="text" formControlName="display_name" placeholder="Nom affiche apres fusion" />
+    <input type="text" formControlName="notes" placeholder="Note interne" />
+    <button type="submit" [disabled]="selectedPhones().length < 2">Fusionner</button>
+  </form>
+
+  @if (editingMergeId()) {
+    <form class="merge-panel edit-panel" [formGroup]="editMergeForm" (ngSubmit)="saveMergeDetails()">
+      <div>
+        <strong>Modifier le client fusionne</strong>
+        <span>Nom et note interne</span>
+      </div>
+      <input type="text" formControlName="display_name" placeholder="Nom affiche" />
+      <input type="text" formControlName="notes" placeholder="Note interne" />
+      <button type="submit">Sauvegarder</button>
+    </form>
+  }
+
+  <div class="table-row table-header clients-table-row">
+    <span>Selection</span>
+    <span>Client</span>
+    <span>Activite</span>
+    <span>Historique</span>
+    <span>Actions</span>
+  </div>
+
+  @for (client of paginatedClients(); track client.id) {
+    <article class="table-row clients-table-row">
+      <span>
+        <input
+          type="checkbox"
+          [checked]="isClientSelected(client)"
+          (change)="toggleClientSelection(client)"
+          aria-label="Selectionner le client"
+        />
+      </span>
+      <span>
+        <strong>{{ client.display_name }}</strong>
+        <small>{{ client.phones.join(' · ') }}</small>
+        @if (client.addresses.length > 0) {
+          <small>{{ client.addresses[0] }}</small>
+        }
+        @if (client.notes) {
+          <small>Note: {{ client.notes }}</small>
+        }
+      </span>
+      <span>
+        <strong>{{ settingsService.formatMoney(client.total_spent) }}</strong>
+        <small>{{ client.orders_count }} commande(s) · {{ client.reservations_count }} reservation(s)</small>
+        <small>Derniere activite: {{ client.last_activity | date: 'dd/MM/yyyy HH:mm' }}</small>
+      </span>
+      <span>
+        <small>Services: {{ client.services.join(', ') || '-' }}</small>
+        <small>Produits: {{ client.products.join(', ') || '-' }}</small>
+      </span>
+      <span class="client-actions">
+        @if (client.merge_id) {
+          <button type="button" (click)="startEditMerge(client)">Modifier</button>
+          <button type="button" (click)="splitMergedClient(client)">Separer</button>
+        } @else {
+          <small>Selectionnez ce client avec un autre pour fusionner.</small>
+        }
+      </span>
+    </article>
+  } @empty {
+    <div class="empty-state">
+      <strong>Aucun client trouve.</strong>
+      <p>Les clients sont construits automatiquement depuis reservations et commandes.</p>
+    </div>
+  }
+
+  <div class="pagination-bar">
+    <span>Page {{ currentPage() }} / {{ totalPages() }} · {{ filteredClients().length }} resultat(s)</span>
+    <div>
+      <button type="button" [disabled]="currentPage() === 1" (click)="goToPreviousPage()">
+        Precedent
+      </button>
+      <button type="button" [disabled]="currentPage() === totalPages()" (click)="goToNextPage()">
+        Suivant
+      </button>
+    </div>
+  </div>
+</section>

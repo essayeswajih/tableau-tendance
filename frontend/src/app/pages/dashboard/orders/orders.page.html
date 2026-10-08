@@ -1,0 +1,92 @@
+<section class="dashboard-panel">
+  <div class="panel-head">
+    <h2>Commandes</h2>
+    <div class="panel-actions">
+      <span>{{ filteredOrders().length }} / {{ orders().length }} commande(s)</span>
+      <button type="button" (click)="loadOrders()">Actualiser</button>
+    </div>
+  </div>
+
+  @if (ordersError()) {
+    <p class="dashboard-error">{{ ordersError() }}</p>
+  }
+
+  <div class="dashboard-filters orders-filters" aria-label="Filtres commandes">
+    <label>
+      <span>Recherche intelligente</span>
+      <input
+        type="search"
+        placeholder="Client, telephone, produit, adresse, total..."
+        [value]="orderSearchTerm()"
+        (input)="updateOrderSearch($event)"
+      />
+    </label>
+    <label>
+      <span>Statut</span>
+      <select [value]="orderStatusFilter()" (change)="updateOrderStatusFilter($event)">
+        <option value="all">Tous les statuts</option>
+        @for (status of orderStatusOptions; track status.value) {
+          <option [value]="status.value">{{ status.label }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  <div class="table-row table-header orders-table-row">
+    <span>Client</span>
+    <span>Produits</span>
+    <span>Adresse</span>
+    <span>Total</span>
+    <span>Statut</span>
+  </div>
+
+  @for (order of paginatedOrders(); track order.id) {
+    <article class="table-row orders-table-row">
+      <span>
+        <strong>{{ order.customer_name }}</strong>
+        <small>{{ order.customer_phone }} · {{ order.created_at | date: 'dd/MM/yyyy HH:mm' }}</small>
+      </span>
+      <span>
+        <strong>{{ orderItemsLabel(order) }}</strong>
+        <small>Sous-total {{ order.subtotal }} DT · Livraison {{ order.delivery_fee }} DT</small>
+      </span>
+      <span>{{ order.delivery_address }}</span>
+      <span><strong>{{ order.total }} DT</strong></span>
+      <span>
+        <span class="status-badge" [class]="'status-badge ' + order.status.replace('_', '-')">
+          {{ orderStatusLabel(order.status) }}
+        </span>
+        <select
+          class="status-select order-status-select"
+          [value]="order.status"
+          (change)="updateOrderStatus(order, $event)"
+        >
+          @for (status of orderStatusOptions; track status.value) {
+            <option [value]="status.value">{{ status.label }}</option>
+          }
+        </select>
+      </span>
+    </article>
+  } @empty {
+    <div class="empty-state">
+      <strong>Aucune commande trouvee.</strong>
+      <p>Modifiez les filtres ou attendez une nouvelle commande finalisee depuis le panier.</p>
+    </div>
+  }
+
+  <div class="pagination-bar">
+    <span>Page {{ orderCurrentPage() }} / {{ orderTotalPages() }} · 10 par page</span>
+    <div>
+      <button type="button" [disabled]="orderCurrentPage() === 1" (click)="goToPreviousOrderPage()">
+        Precedent
+      </button>
+      <button
+        type="button"
+        [disabled]="orderCurrentPage() === orderTotalPages()"
+        (click)="goToNextOrderPage()"
+      >
+        Suivant
+      </button>
+    </div>
+  </div>
+</section>

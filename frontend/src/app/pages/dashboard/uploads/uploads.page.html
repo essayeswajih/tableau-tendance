@@ -1,0 +1,62 @@
+<section class="dashboard-panel">
+  <div class="panel-head">
+    <h2>Uploads media</h2>
+    <div class="panel-actions">
+      <span>{{ uploads().length }} fichier(s)</span>
+      <button type="button" (click)="loadUploads()">Actualiser</button>
+    </div>
+  </div>
+
+  @if (uploadsError()) {
+    <p class="dashboard-error">{{ uploadsError() }}</p>
+  }
+
+  <div class="upload-zone">
+    <label>
+      <span>Images, videos et fichiers</span>
+      <input
+        type="file"
+        accept="image/*,video/*,.pdf,.txt,.doc,.docx"
+        (change)="selectUploadFile($event)"
+      />
+    </label>
+    <button
+      class="button button-primary"
+      type="button"
+      [disabled]="!uploadFile() || isUploading()"
+      (click)="uploadSelectedFile()"
+    >
+      {{ isUploading() ? 'Upload...' : 'Uploader' }}
+    </button>
+  </div>
+
+  <div class="media-grid">
+    @for (upload of uploads(); track upload.filename) {
+      <article class="media-card">
+        <div class="media-preview">
+          @if (upload.kind === 'image') {
+            <img [src]="upload.url" [alt]="upload.filename" />
+          } @else if (upload.kind === 'video') {
+            <video [src]="upload.url" controls></video>
+          } @else {
+            <span>{{ upload.filename.split('.').pop() || 'file' }}</span>
+          }
+        </div>
+        <div class="media-info">
+          <strong>{{ upload.filename }}</strong>
+          <small>{{ upload.kind }} · {{ formatFileSize(upload.size) }}</small>
+        </div>
+        <div class="media-actions">
+          <a [href]="upload.url" target="_blank" rel="noreferrer">Ouvrir</a>
+          <button type="button" (click)="renameUpload(upload)">Renommer</button>
+          <button type="button" (click)="deleteUpload(upload)">Supprimer</button>
+        </div>
+      </article>
+    } @empty {
+      <div class="empty-state">
+        <strong>Aucun media uploade</strong>
+        <p>Ajoutez les images, videos et fichiers admin depuis cette section.</p>
+      </div>
+    }
+  </div>
+</section>

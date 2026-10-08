@@ -1,0 +1,157 @@
+@if (!isAdminRoute()) {
+<div class="top-service-bar" aria-label="Avantages boutique">
+  <span>
+    <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16">
+      <path d="M3 7h11v8H3zM14 10h4l3 3v2h-7zM7 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM18 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" />
+    </svg>
+    Livraison partout en Tunisie
+  </span>
+  <span>
+    <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16">
+      <rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.7" />
+      <path d="M3 10h18" stroke="currentColor" stroke-width="1.7" />
+    </svg>
+    Paiement a la livraison
+  </span>
+  <span>
+    <svg aria-hidden="true" viewBox="0 0 24 24" width="16" height="16">
+      <path d="M12 3 19 6v5c0 4.4-2.8 8-7 10-4.2-2-7-5.6-7-10V6l7-3Z" fill="none" stroke="currentColor" stroke-width="1.7" />
+    </svg>
+    Satisfait ou rembourse
+  </span>
+</div>
+
+<header class="site-header" aria-label="Navigation principale">
+  <button
+    class="icon-button menu-toggle"
+    type="button"
+    aria-label="Ouvrir le menu"
+    aria-controls="mobile-menu"
+    [attr.aria-expanded]="isMenuOpen()"
+    (click)="toggleMenu()"
+  >
+    <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22">
+      <path
+        d="M4 7h16M4 12h16M4 17h16"
+        fill="none"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-width="2"
+      />
+    </svg>
+  </button>
+
+  <a class="brand" routerLink="/" aria-label="Tableau Tendance accueil">
+    <img class="brand-logo" [src]="settingsService.settings().branding.logo_url" alt="" />
+    <span>
+      <strong>Tableau Tendance</strong>
+      <small>Tableaux Decoratifs</small>
+    </span>
+  </a>
+
+  <nav class="desktop-nav" aria-label="Navigation">
+    <a routerLink="/" routerLinkActive="is-active" [routerLinkActiveOptions]="{ exact: true }">
+      Accueil
+    </a>
+    <a routerLink="/boutique" routerLinkActive="is-active">Nos tableaux</a>
+    <a routerLink="/collections" routerLinkActive="is-active">Collections</a>
+    <a routerLink="/boutique" fragment="offres" routerLinkActive="is-active">Offres</a>
+    <a routerLink="/a-propos" routerLinkActive="is-active">A propos</a>
+    <a routerLink="/galerie" routerLinkActive="is-active">Galerie</a>
+    <a routerLink="/contact" routerLinkActive="is-active">Contact</a>
+  </nav>
+
+  <div class="header-actions">
+    <button class="icon-button" type="button" aria-label="Rechercher">
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22">
+        <path d="m21 21-4.3-4.3M10.8 18a7.2 7.2 0 1 1 0-14.4 7.2 7.2 0 0 1 0 14.4Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+      </svg>
+    </button>
+    <a class="icon-button" routerLink="/login" aria-label="Compte">
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="22" height="22">
+        <path d="M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8ZM4 21a8 8 0 0 1 16 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+      </svg>
+    </a>
+    <a class="icon-button" routerLink="/panier" aria-label="Ouvrir le panier">
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="20" height="20">
+        <path
+          d="M7 18.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm10 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3ZM5.2 5l.7 3.8 1.1 5.7c.2 1 1.1 1.8 2.2 1.8h7.4c1 0 1.9-.7 2.2-1.7L20.5 8H7.1L6.6 5.6A2 2 0 0 0 4.7 4H3a1 1 0 1 0 0 2h1.7c.2 0 .4.1.5.3Z"
+          fill="currentColor"
+        />
+      </svg>
+      <span class="cart-badge">{{ cart.itemCount() }}</span>
+    </a>
+  </div>
+</header>
+
+<div
+  class="mobile-menu-backdrop"
+  [class.is-open]="isMenuOpen()"
+  [attr.aria-hidden]="!isMenuOpen()"
+  (click)="closeMenu()"
+></div>
+
+<aside
+  class="mobile-menu"
+  id="mobile-menu"
+  aria-label="Menu mobile"
+  [class.is-open]="isMenuOpen()"
+  [attr.aria-hidden]="!isMenuOpen()"
+>
+  <div class="mobile-menu-head">
+    <a class="brand" routerLink="/" aria-label="Tableau Tendance accueil" (click)="closeMenu()">
+      <img class="brand-logo" [src]="settingsService.settings().branding.logo_url" alt="" />
+      <span>
+        <strong>Tableau Tendance</strong>
+        <small>Tableaux Decoratifs</small>
+      </span>
+    </a>
+    <button class="icon-button" type="button" aria-label="Fermer le menu" (click)="closeMenu()">
+      <svg aria-hidden="true" viewBox="0 0 24 24" width="21" height="21">
+        <path
+          d="m6 6 12 12M18 6 6 18"
+          fill="none"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-width="2"
+        />
+      </svg>
+    </button>
+  </div>
+
+  <nav class="mobile-nav" aria-label="Navigation mobile">
+    <a routerLink="/" (click)="closeMenu()">Accueil</a>
+    <a routerLink="/boutique" (click)="closeMenu()">Nos tableaux</a>
+    <a routerLink="/collections" (click)="closeMenu()">Collections</a>
+    <a routerLink="/a-propos" (click)="closeMenu()">A propos</a>
+    <a routerLink="/galerie" (click)="closeMenu()">Galerie</a>
+    <a routerLink="/contact" (click)="closeMenu()">Contact</a>
+  </nav>
+
+  <div class="mobile-menu-footer">
+    <a class="button button-primary" routerLink="/boutique" (click)="closeMenu()">
+      Acheter un tableau
+    </a>
+    <a class="whatsapp-link" [href]="settingsService.whatsappHref()">WhatsApp</a>
+    <span>{{ settingsService.todayHoursLabel() }}</span>
+  </div>
+</aside>
+} @else {
+<header class="admin-header" aria-label="En-tete administration">
+  <div class="admin-header-brand">
+    <img class="brand-logo" [src]="settingsService.settings().branding.logo_url" alt="" />
+    <div>
+      <strong>Tableau Tendance Admin</strong>
+      <span>Espace securise pour gerer la boutique avec clarte.</span>
+    </div>
+  </div>
+  <p>Commandes, produits et contenu restent sous controle.</p>
+</header>
+}
+
+<router-outlet />
+
+<footer class="site-footer" [class.is-admin-footer]="isAdminRoute()">
+  <span>Tableau Tendance</span>
+  <span>{{ settingsService.settings().branding.short_description }}</span>
+</footer>

@@ -1,0 +1,139 @@
+<main class="shop-page">
+  <section class="shop-hero section-shell">
+    <div>
+      <p class="eyebrow">Boutique Tableau Tendance</p>
+      <h1>Tableaux decoratifs modernes en Tunisie.</h1>
+      <p class="hero-lede">
+        Une selection claire de tableaux muraux pour salon, chambre, bureau et
+        espaces professionnels, avec paiement a la livraison.
+      </p>
+    </div>
+    <div class="shop-summary-card">
+      <span>Panier</span>
+      <strong>{{ settingsService.settings().boutique.orders_enabled ? 'Commande active' : 'Commande fermee' }}</strong>
+      <p>{{ settingsService.settings().boutique.payment_note }}</p>
+    </div>
+  </section>
+
+  <section class="shop-layout section-shell">
+    <aside class="filter-panel" aria-label="Filtres boutique">
+      <label class="search-field">
+        <span>Recherche</span>
+        <input
+          type="search"
+          placeholder="AB01, abstrait, calligraphie..."
+          [value]="searchTerm()"
+          (input)="updateSearch($event)"
+        />
+      </label>
+
+      <div class="filter-group">
+        <span>Categories</span>
+        <div class="category-list">
+          @for (category of categories(); track category) {
+            <button
+              type="button"
+              [class.is-active]="category === selectedCategory()"
+              (click)="selectCategory(category)"
+            >
+              {{ category }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="empty-note">
+        <strong>Besoin d'un conseil ?</strong>
+        <p>Envoyez-nous une photo de votre mur pour choisir le meilleur tableau.</p>
+      </div>
+    </aside>
+
+    <div class="catalog-area">
+      <div class="catalog-toolbar">
+        <div>
+          <p class="eyebrow">Catalogue</p>
+          <h2>{{ filteredProducts().length }} produits disponibles</h2>
+          <p class="catalog-count">
+            Affichage {{ firstProductIndex() }}-{{ lastProductIndex() }} sur
+            {{ filteredProducts().length }}
+          </p>
+        </div>
+        <label class="sort-field">
+          <span>Trier</span>
+          <select [value]="sortMode()" (change)="updateSort($event)">
+            <option value="selection">Selection Tableau Tendance</option>
+            <option value="price-asc">Prix croissant</option>
+            <option value="new">Nouveautes</option>
+          </select>
+        </label>
+      </div>
+
+      <div class="products-grid shop-products-grid">
+        @for (product of paginatedProducts(); track product.title) {
+          <article class="product-card">
+            <a class="product-image" [routerLink]="articlePath(product)">
+              @if (product.badge) {
+                <span class="badge">{{ product.badge }}</span>
+              }
+              <img [src]="product.image" [alt]="product.title" loading="lazy" />
+            </a>
+            <div class="product-info">
+              <span>{{ product.category }}</span>
+              <h3><a [routerLink]="articlePath(product)">{{ product.title }}</a></h3>
+              <div class="product-row">
+                <strong>{{ product.price }}</strong>
+                <button
+                  class="icon-button add-button"
+                  type="button"
+                  aria-label="Ajouter au panier"
+                  [disabled]="!settingsService.settings().boutique.orders_enabled"
+                  (click)="addToCart(product)"
+                >
+                  <svg aria-hidden="true" viewBox="0 0 24 24" width="19" height="19">
+                    <path
+                      d="M7 18.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Zm10 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3ZM5.2 5l.7 3.8 1.1 5.7c.2 1 1.1 1.8 2.2 1.8h7.4c1 0 1.9-.7 2.2-1.7L20.5 8H7.1L6.6 5.6A2 2 0 0 0 4.7 4H3a1 1 0 1 0 0 2h1.7c.2 0 .4.1.5.3Z"
+                      fill="currentColor"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </article>
+        }
+      </div>
+
+      <nav class="pagination" aria-label="Pagination boutique">
+        <button
+          type="button"
+          class="pagination-step"
+          [disabled]="currentPage() === 1"
+          (click)="goToPage(currentPage() - 1)"
+        >
+          Précédent
+        </button>
+
+        <div class="pagination-pages">
+          @for (page of pages(); track page) {
+            <button
+              type="button"
+              [class.is-active]="page === currentPage()"
+              [attr.aria-current]="page === currentPage() ? 'page' : null"
+              (click)="goToPage(page)"
+            >
+              {{ page }}
+            </button>
+          }
+        </div>
+
+        <button
+          type="button"
+          class="pagination-step"
+          [disabled]="currentPage() === pageCount()"
+          (click)="goToPage(currentPage() + 1)"
+        >
+          Suivant
+        </button>
+      </nav>
+    </div>
+  </section>
+</main>

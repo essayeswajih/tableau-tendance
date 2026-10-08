@@ -1,0 +1,94 @@
+<section class="dashboard-panel">
+  <div class="panel-head">
+    <h2>Messages</h2>
+    <div class="panel-actions">
+      <span>{{ filteredMessages().length }} / {{ messages().length }} message(s)</span>
+      <button type="button" (click)="loadMessages()">Actualiser</button>
+    </div>
+  </div>
+
+  @if (messagesError()) {
+    <p class="dashboard-error">{{ messagesError() }}</p>
+  }
+
+  <div class="dashboard-filters messages-filters" aria-label="Filtres messages">
+    <label>
+      <span>Recherche</span>
+      <input
+        type="search"
+        placeholder="Nom, telephone, sujet, message..."
+        [value]="searchTerm()"
+        (input)="updateSearch($event)"
+      />
+    </label>
+    <label>
+      <span>Statut</span>
+      <select [value]="statusFilter()" (change)="updateStatusFilter($event)">
+        <option value="all">Tous les statuts</option>
+        @for (status of statusOptions; track status.value) {
+          <option [value]="status.value">{{ status.label }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  <div class="table-row table-header messages-table-row">
+    <span>Client</span>
+    <span>Sujet</span>
+    <span>Message</span>
+    <span>Statut</span>
+    <span>Action</span>
+  </div>
+
+  @for (message of paginatedMessages(); track message.id) {
+    <article class="table-row messages-table-row">
+      <span>
+        <strong>{{ message.customer_name }}</strong>
+        <small>
+          {{ message.customer_phone }}
+          @if (message.customer_email) {
+            · {{ message.customer_email }}
+          }
+          · {{ message.created_at | date: 'dd/MM/yyyy HH:mm' }}
+        </small>
+      </span>
+      <span>{{ message.subject }}</span>
+      <span class="message-body">{{ message.message }}</span>
+      <span>
+        <mark class="status-badge" [class]="'status-badge ' + message.status">
+          {{ statusLabel(message.status) }}
+        </mark>
+      </span>
+      <span class="message-actions">
+        <select
+          class="status-select"
+          [value]="message.status"
+          (change)="updateMessageStatus(message, $event)"
+          aria-label="Modifier le statut"
+        >
+          @for (status of statusOptions; track status.value) {
+            <option [value]="status.value">{{ status.label }}</option>
+          }
+        </select>
+        <button type="button" (click)="archiveMessage(message)">Archiver</button>
+      </span>
+    </article>
+  } @empty {
+    <div class="empty-state">
+      <strong>Aucun message trouve.</strong>
+      <p>Les messages envoyes depuis la page contact apparaitront ici.</p>
+    </div>
+  }
+
+  <div class="pagination-bar">
+    <span>Page {{ currentPage() }} / {{ totalPages() }} · {{ filteredMessages().length }} resultat(s)</span>
+    <div>
+      <button type="button" [disabled]="currentPage() === 1" (click)="goToPreviousPage()">
+        Precedent
+      </button>
+      <button type="button" [disabled]="currentPage() === totalPages()" (click)="goToNextPage()">
+        Suivant
+      </button>
+    </div>
+  </div>
+</section>

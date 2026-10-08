@@ -1,0 +1,160 @@
+<section class="overview-page">
+  <div class="overview-title">
+    <div>
+      <p class="eyebrow">Vue generale</p>
+      <h2>Analyse du salon</h2>
+      <p>Reservations, commandes, clients et messages depuis les donnees reelles.</p>
+    </div>
+    <span>{{ recentActivity().length }} activite(s) recentes</span>
+  </div>
+
+  @if (overviewError()) {
+    <p class="dashboard-error">{{ overviewError() }}</p>
+  }
+
+  <section class="kpi-grid" aria-label="Indicateurs principaux">
+    <article>
+      <span>Chiffre d'affaires</span>
+      <strong>{{ formatCurrency(totalRevenue()) }}</strong>
+      <small>{{ deliveredOrdersCount() }} commande(s) livree(s)</small>
+    </article>
+    <article>
+      <span>Reservations</span>
+      <strong>{{ reservations().length }}</strong>
+      <small>{{ pendingReservationsCount() }} en attente</small>
+    </article>
+    <article>
+      <span>Commandes</span>
+      <strong>{{ orders().length }}</strong>
+      <small>{{ pendingOrdersCount() }} nouvelle(s)</small>
+    </article>
+    <article>
+      <span>Clients</span>
+      <strong>{{ clients().length }}</strong>
+      <small>{{ unreadMessagesCount() }} message(s) nouveau(x)</small>
+    </article>
+    <article>
+      <span>Panier moyen</span>
+      <strong>{{ formatCurrency(averageOrderValue()) }}</strong>
+      <small>Hors commandes annulees</small>
+    </article>
+  </section>
+
+  <section class="overview-grid">
+    <article class="analysis-panel trend-panel">
+      <div class="panel-label">
+        <h3>Activite 7 jours</h3>
+        <small>Reservations vs commandes</small>
+      </div>
+      <div class="trend-chart">
+        @for (day of weeklyTrend(); track day.label) {
+          <div class="trend-day">
+            <div class="trend-bars">
+              <span class="bar reservations" [style.height.%]="barHeight(day.reservations, day.max)"></span>
+              <span class="bar orders" [style.height.%]="barHeight(day.orders, day.max)"></span>
+            </div>
+            <strong>{{ day.label }}</strong>
+            <small>{{ formatCurrency(day.revenue) }}</small>
+          </div>
+        }
+      </div>
+      <div class="chart-legend">
+        <span><i class="reservations"></i> Reservations</span>
+        <span><i class="orders"></i> Commandes</span>
+      </div>
+    </article>
+
+    <article class="analysis-panel">
+      <div class="panel-label">
+        <h3>Statut reservations</h3>
+        <small>{{ pendingReservationsCount() }} demande(s) a traiter</small>
+      </div>
+      <div class="status-list">
+        @for (slice of reservationStatusSlices(); track slice.label) {
+          <div class="status-line">
+            <span>{{ slice.label }}</span>
+            <strong>{{ slice.value }}</strong>
+            <div class="progress-track">
+              <i [class]="slice.className" [style.width.%]="slice.percent"></i>
+            </div>
+          </div>
+        }
+      </div>
+    </article>
+
+    <article class="analysis-panel">
+      <div class="panel-label">
+        <h3>Statut commandes</h3>
+        <small>{{ pendingOrdersCount() }} commande(s) a confirmer</small>
+      </div>
+      <div class="status-list">
+        @for (slice of orderStatusSlices(); track slice.label) {
+          <div class="status-line">
+            <span>{{ slice.label }}</span>
+            <strong>{{ slice.value }}</strong>
+            <div class="progress-track">
+              <i [class]="slice.className" [style.width.%]="slice.percent"></i>
+            </div>
+          </div>
+        }
+      </div>
+    </article>
+
+    <article class="analysis-panel">
+      <div class="panel-label">
+        <h3>Top services</h3>
+        <small>Demandes les plus reservees</small>
+      </div>
+      <div class="rank-list">
+        @for (service of topServices(); track service.label) {
+          <div class="rank-row">
+            <span>{{ service.label }}</span>
+            <strong>{{ service.value }}</strong>
+            <div class="progress-track"><i [style.width.%]="service.percent"></i></div>
+          </div>
+        } @empty {
+          <p class="empty-mini">Aucune reservation pour le moment.</p>
+        }
+      </div>
+    </article>
+
+    <article class="analysis-panel">
+      <div class="panel-label">
+        <h3>Top produits</h3>
+        <small>Articles les plus commandes</small>
+      </div>
+      <div class="rank-list">
+        @for (product of topProducts(); track product.label) {
+          <div class="rank-row">
+            <span>{{ product.label }}</span>
+            <strong>{{ product.value }}</strong>
+            <div class="progress-track"><i [style.width.%]="product.percent"></i></div>
+          </div>
+        } @empty {
+          <p class="empty-mini">Aucune commande pour le moment.</p>
+        }
+      </div>
+    </article>
+
+    <article class="analysis-panel activity-panel">
+      <div class="panel-label">
+        <h3>Activite recente</h3>
+        <small>Derniers mouvements dashboard</small>
+      </div>
+      <div class="activity-list">
+        @for (activity of recentActivity(); track activity.kind + activity.date + activity.label) {
+          <div class="activity-row">
+            <span [class]="activity.kind">{{ activity.kind.charAt(0).toUpperCase() }}</span>
+            <div>
+              <strong>{{ activity.label }}</strong>
+              <small>{{ activity.detail }}</small>
+            </div>
+            <time>{{ formatDate(activity.date) }}</time>
+          </div>
+        } @empty {
+          <p class="empty-mini">Aucune activite recente.</p>
+        }
+      </div>
+    </article>
+  </section>
+</section>

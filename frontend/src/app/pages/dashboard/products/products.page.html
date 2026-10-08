@@ -1,0 +1,137 @@
+<section class="dashboard-panel">
+  <div class="panel-head">
+    <h2>Boutique</h2>
+    <div class="panel-actions">
+      <span>{{ filteredProducts().length }} / {{ products().length }} produit(s)</span>
+      <button type="button" (click)="loadProducts()">Actualiser</button>
+    </div>
+  </div>
+
+  @if (productsError()) {
+    <p class="dashboard-error">{{ productsError() }}</p>
+  }
+  @if (productsNotice()) {
+    <p class="dashboard-notice">{{ productsNotice() }}</p>
+  }
+
+  <form class="product-form" [formGroup]="productForm" (ngSubmit)="saveProduct()">
+    <div class="product-form-head">
+      <div>
+        <strong>{{ editingProductId() ? 'Modifier le produit' : 'Nouveau produit' }}</strong>
+        <span>Gardez les infos boutique simples et lisibles.</span>
+      </div>
+      <button type="button" (click)="startCreateProduct()">Nouveau</button>
+    </div>
+
+    <div class="form-grid product-form-grid">
+      <label><span>Titre</span><input type="text" formControlName="title" (input)="updateProductTitle($event)" /></label>
+      <label class="slug-field">
+        <span>Slug de l'article</span>
+        <input
+          type="text"
+          formControlName="slug"
+          placeholder="tableau-nom-produit"
+          (input)="updateProductSlug($event)"
+        />
+        <small>{{ previewSlug() }}</small>
+      </label>
+      <label><span>Categorie</span><input type="text" formControlName="category" /></label>
+      <label><span>Prix</span><input type="text" formControlName="price" placeholder="38 DT" /></label>
+      <label><span>Badge</span><input type="text" formControlName="badge" placeholder="Nouveau, Promo..." /></label>
+      <label class="wide-field">
+        <span>Image</span>
+        <input type="text" formControlName="image" placeholder="/uploads/image.jpg" />
+      </label>
+      <label class="toggle-field">
+        <input type="checkbox" formControlName="is_active" />
+        <span>Produit actif</span>
+      </label>
+    </div>
+
+    <div class="image-picker">
+      <span>Images uploadées</span>
+      <div>
+        @for (upload of uploads(); track upload.filename) {
+          @if (upload.kind === 'image') {
+            <button type="button" (click)="useImageForProduct(upload)">
+              <img [src]="upload.url" [alt]="upload.filename" />
+            </button>
+          }
+        }
+      </div>
+    </div>
+
+    <button class="button button-primary" type="submit" [disabled]="isSavingProduct()">
+      {{ isSavingProduct() ? 'Sauvegarde...' : 'Sauvegarder le produit' }}
+    </button>
+  </form>
+
+  <div class="dashboard-filters product-filters" aria-label="Filtres produits">
+    <label>
+      <span>Recherche</span>
+      <input
+        type="search"
+        placeholder="Titre, categorie, prix, image..."
+        [value]="productSearchTerm()"
+        (input)="updateProductSearch($event)"
+      />
+    </label>
+    <label>
+      <span>Categorie</span>
+      <select [value]="productCategoryFilter()" (change)="updateProductCategoryFilter($event)">
+        @for (category of productCategories(); track category) {
+          <option [value]="category">{{ category === 'all' ? 'Toutes les categories' : category }}</option>
+        }
+      </select>
+    </label>
+    <label>
+      <span>Statut</span>
+      <select [value]="productStatusFilter()" (change)="updateProductStatusFilter($event)">
+        <option value="all">Tous les statuts</option>
+        <option value="active">Actifs</option>
+        <option value="hidden">Masques</option>
+      </select>
+    </label>
+    <label>
+      <span>Badge</span>
+      <select [value]="productBadgeFilter()" (change)="updateProductBadgeFilter($event)">
+        @for (badge of productBadges(); track badge) {
+          <option [value]="badge">{{ badge === 'all' ? 'Tous les badges' : badge }}</option>
+        }
+      </select>
+    </label>
+  </div>
+
+  <div class="product-admin-list">
+    @for (product of paginatedProducts(); track product.id || product.title) {
+      <article class="product-admin-row">
+        <img [src]="product.image" [alt]="product.title" />
+        <div>
+          <strong>{{ product.title }}</strong>
+          <small>{{ product.slug }} · {{ product.category }} · {{ product.price }}</small>
+          @if (product.badge) {
+            <mark>{{ product.badge }}</mark>
+          }
+        </div>
+        <span>{{ product.is_active ? 'Actif' : 'Masque' }}</span>
+        <div class="row-actions">
+          <button type="button" (click)="startEditProduct(product)">Modifier</button>
+          <button type="button" (click)="deleteProduct(product)">Supprimer</button>
+        </div>
+      </article>
+    } @empty {
+      <div class="empty-state">
+        <strong>Aucun produit</strong>
+        <p>Ajoutez votre premier produit boutique depuis le formulaire.</p>
+      </div>
+    }
+  </div>
+
+  <div class="pagination-bar">
+    <span>Page {{ productCurrentPage() }} / {{ productTotalPages() }} · {{ filteredProducts().length }} resultat(s)</span>
+    <div>
+      <button type="button" [disabled]="productCurrentPage() === 1" (click)="goToPreviousProductPage()">Precedent</button>
+      <button type="button" [disabled]="productCurrentPage() === productTotalPages()" (click)="goToNextProductPage()">Suivant</button>
+    </div>
+  </div>
+</section>

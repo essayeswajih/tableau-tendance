@@ -1,0 +1,157 @@
+@use '../dashboard-section';
+
+.product-form {
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  gap: 18px;
+  padding: 24px;
+}
+
+.dashboard-notice {
+  background: #f7edd7;
+  border: 1px solid #dfc689;
+  border-radius: 8px;
+  color: #6d4f13;
+  font-weight: 800;
+  margin: 0 24px 16px;
+  padding: 12px 14px;
+}
+
+.product-form-head {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.product-form-head > div,
+.form-grid label {
+  display: grid;
+  gap: 8px;
+}
+
+.product-form-head span,
+.image-picker > span {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.product-form-head button {
+  background: var(--background-soft);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  color: var(--primary);
+  cursor: pointer;
+  font-weight: 800;
+  min-height: 38px;
+  padding: 0 12px;
+}
+
+.form-grid label span {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.product-form-grid,
+.product-filters {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.slug-field {
+  grid-column: span 2;
+}
+
+.wide-field {
+  grid-column: span 3;
+}
+
+.slug-field small {
+  color: #8d6b25;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: none;
+}
+
+.toggle-field {
+  align-content: end;
+  align-items: center;
+  display: flex !important;
+  gap: 10px !important;
+}
+
+.toggle-field input {
+  min-height: auto;
+}
+
+.image-picker {
+  display: grid;
+  gap: 10px;
+}
+
+.image-picker > div {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+.image-picker button {
+  background: transparent;
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  cursor: pointer;
+  height: 72px;
+  min-width: 72px;
+  overflow: hidden;
+  padding: 0;
+}
+
+.image-picker img {
+  height: 100%;
+  object-fit: cover;
+  width: 100%;
+}
+
+.product-admin-row {
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 72px minmax(0, 1fr) 90px 190px;
+  padding: 16px 24px;
+}
+
+.product-admin-row > img {
+  aspect-ratio: 1;
+  border-radius: 12px;
+  object-fit: cover;
+  width: 72px;
+}
+
+.product-admin-row > div:first-of-type {
+  display: grid;
+  gap: 5px;
+}
+
+.product-admin-row small,
+.product-admin-row > span {
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.product-admin-row mark {
+  background: #fbf2f3;
+  border-radius: 999px;
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 900;
+  padding: 5px 9px;
+  width: fit-content;
+}
+
+.row-actions {
+  display: flex;
+  gap: 8px;
+}

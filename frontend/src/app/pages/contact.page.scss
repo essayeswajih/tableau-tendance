@@ -1,0 +1,257 @@
+.contact-page {
+  background:
+    linear-gradient(180deg, var(--background-soft) 0, #fff 430px),
+    #fff;
+}
+
+.contact-hero {
+  align-items: end;
+  display: grid;
+  gap: 48px;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  padding-bottom: 72px;
+  padding-top: 96px;
+}
+
+.contact-hero h1 {
+  max-width: 800px;
+}
+
+.contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.contact-summary-card,
+.contact-panel,
+.contact-form,
+.hours-card {
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.contact-summary-card {
+  display: grid;
+  gap: 8px;
+  padding: 24px;
+}
+
+.contact-summary-card span,
+.contact-methods span,
+.contact-form label > span {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.contact-summary-card strong {
+  font-size: 28px;
+}
+
+.contact-grid {
+  align-items: start;
+  display: grid;
+  gap: 32px;
+  grid-template-columns: minmax(320px, 0.82fr) minmax(0, 1.18fr);
+  padding-top: 32px;
+}
+
+.contact-panel,
+.contact-form {
+  display: grid;
+  gap: 24px;
+  padding: 28px;
+}
+
+.contact-methods {
+  display: grid;
+  gap: 12px;
+}
+
+.contact-methods a {
+  background: var(--background-soft);
+  border: 1px solid transparent;
+  border-radius: 14px;
+  display: grid;
+  gap: 4px;
+  padding: 16px;
+  text-decoration: none;
+}
+
+.contact-methods a:hover {
+  background: #fff;
+  border-color: var(--primary);
+}
+
+.contact-methods strong {
+  color: var(--text);
+}
+
+.hours-card {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+}
+
+.hours-card h3 {
+  margin-bottom: 0;
+}
+
+.hours-card dl {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+}
+
+.hours-card div {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+}
+
+.hours-card dt {
+  color: var(--text-secondary);
+  font-weight: 700;
+}
+
+.hours-card dd {
+  margin: 0;
+  font-weight: 800;
+}
+
+.form-row {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.contact-form label {
+  display: grid;
+  gap: 8px;
+}
+
+.contact-form input,
+.contact-form select,
+.contact-form textarea {
+  background: #fff;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  color: var(--text);
+  min-height: 50px;
+  padding: 0 14px;
+  width: 100%;
+}
+
+.contact-form textarea {
+  padding-block: 14px;
+  resize: vertical;
+}
+
+.contact-form input:focus,
+.contact-form select:focus,
+.contact-form textarea:focus {
+  border-color: var(--primary);
+  outline: 3px solid color-mix(in srgb, var(--primary) 16%, transparent);
+}
+
+.contact-form .button {
+  justify-self: start;
+}
+
+.form-note {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-bottom: 0;
+}
+
+.form-note.is-success {
+  color: var(--success);
+  font-weight: 800;
+}
+
+.form-note.is-error {
+  color: #9f1239;
+  font-weight: 800;
+}
+
+.map-section {
+  padding-top: 34px;
+}
+
+.map-placeholder {
+  align-items: end;
+  background:
+    linear-gradient(rgba(28, 28, 28, 0.08), rgba(28, 28, 28, 0.2)),
+    url('/uploads/tableau-hero.png');
+  background-position: center;
+  background-size: cover;
+  border-radius: 32px;
+  display: flex;
+  min-height: 360px;
+  overflow: hidden;
+  padding: 24px;
+}
+
+.map-placeholder > div {
+  background: rgba(255, 255, 255, 0.92);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  display: grid;
+  gap: 6px;
+  max-width: 360px;
+  padding: 22px;
+}
+
+.map-placeholder span {
+  color: var(--primary);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.map-placeholder strong {
+  font-size: 24px;
+}
+
+@media (max-width: 1024px) {
+  .contact-hero,
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .contact-hero {
+    gap: 28px;
+    padding-top: 72px;
+  }
+
+  .contact-actions,
+  .contact-actions .button {
+    width: 100%;
+  }
+
+  .contact-panel,
+  .contact-form {
+    padding: 22px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .contact-form .button {
+    width: 100%;
+  }
+
+  .map-placeholder {
+    border-radius: var(--radius-lg);
+    min-height: 320px;
+    padding: 16px;
+  }
+}

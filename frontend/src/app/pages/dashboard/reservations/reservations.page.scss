@@ -1,0 +1,10 @@
+@use '../dashboard-section';
+
+.reservations-filters,
+.reservations-table-row {
+  grid-template-columns: 1.4fr 1fr 1fr 0.8fr 0.9fr;
+}
+
+.status-select {
+  width: 100%;
+}

@@ -1,0 +1,131 @@
+<section class="dashboard-panel">
+  <div class="panel-head">
+    <h2>Parametres</h2>
+    <div class="panel-actions">
+      <span>{{ isLoading() ? 'Chargement...' : 'Configuration salon' }}</span>
+      <button type="button" (click)="loadSettings()">Actualiser</button>
+    </div>
+  </div>
+
+  @if (settingsError()) {
+    <p class="dashboard-error">{{ settingsError() }}</p>
+  }
+
+  @if (settingsSuccess()) {
+    <p class="dashboard-success">{{ settingsSuccess() }}</p>
+  }
+
+  <form class="settings-form" [formGroup]="settingsForm" (ngSubmit)="saveSettings()">
+    <section class="settings-section" formGroupName="salon_info">
+      <div>
+        <h3>Salon Info</h3>
+        <p>Coordonnees principales visibles sur le site.</p>
+      </div>
+      <div class="settings-grid">
+        <label><span>Nom du salon</span><input type="text" formControlName="salon_name" /></label>
+        <label><span>Telephone</span><input type="text" formControlName="phone" /></label>
+        <label><span>WhatsApp</span><input type="text" formControlName="whatsapp" /></label>
+        <label><span>Email</span><input type="email" formControlName="email" /></label>
+        <label class="wide-field"><span>Adresse</span><input type="text" formControlName="address" /></label>
+        <label><span>Instagram</span><input type="url" formControlName="instagram" /></label>
+        <label><span>Facebook</span><input type="url" formControlName="facebook" /></label>
+      </div>
+    </section>
+
+    <section class="settings-section">
+      <div>
+        <h3>Opening Hours</h3>
+        <p>Horaires par jour, utilisables pour reservation et affichage public.</p>
+      </div>
+      <div class="hours-list" formArrayName="opening_hours">
+        @for (hour of openingHours.controls; track hour.value.day; let index = $index) {
+          <div class="hours-row" [formGroupName]="index">
+            <strong>{{ hour.value.day }}</strong>
+            <label class="inline-toggle">
+              <input type="checkbox" formControlName="is_open" />
+              <span>Ouvert</span>
+            </label>
+            <label><span>Debut</span><input type="time" formControlName="opens_at" /></label>
+            <label><span>Fin</span><input type="time" formControlName="closes_at" /></label>
+          </div>
+        }
+      </div>
+    </section>
+
+    <section class="settings-section" formGroupName="reservation">
+      <div>
+        <h3>Reservation Settings</h3>
+        <p>Regles de planning et message client apres demande.</p>
+      </div>
+      <div class="settings-grid">
+        <label class="inline-toggle">
+          <input type="checkbox" formControlName="reservations_enabled" />
+          <span>Reservations activees</span>
+        </label>
+        <label><span>Duree creneau</span><input type="number" formControlName="slot_duration_minutes" /></label>
+        <label><span>Max par creneau</span><input type="number" formControlName="max_reservations_per_slot" /></label>
+        <label><span>Delai minimum h</span><input type="number" formControlName="min_advance_hours" /></label>
+        <label class="full-field"><span>Message confirmation</span><textarea rows="3" formControlName="confirmation_message"></textarea></label>
+      </div>
+    </section>
+
+    <section class="settings-section" formGroupName="boutique">
+      <div>
+        <h3>Boutique / Delivery Settings</h3>
+        <p>Frais, devise parametrable, statut initial et note paiement.</p>
+      </div>
+      <div class="settings-grid">
+        <label class="inline-toggle">
+          <input type="checkbox" formControlName="orders_enabled" />
+          <span>Commandes activees</span>
+        </label>
+        <label><span>Frais livraison</span><input type="number" formControlName="delivery_fee" /></label>
+        <label><span>Livraison gratuite des</span><input type="number" formControlName="free_delivery_threshold" /></label>
+        <label><span>Devise</span><input type="text" formControlName="currency" /></label>
+        <label>
+          <span>Statut par defaut</span>
+          <select formControlName="default_order_status">
+            @for (status of orderStatusOptions; track status.value) {
+              <option [value]="status.value">{{ status.label }}</option>
+            }
+          </select>
+        </label>
+        <label class="full-field"><span>Note paiement</span><textarea rows="3" formControlName="payment_note"></textarea></label>
+      </div>
+    </section>
+
+    <section class="settings-section" formGroupName="dashboard">
+      <div>
+        <h3>Dashboard Preferences</h3>
+        <p>Preferences internes de l'administration.</p>
+      </div>
+      <div class="settings-grid">
+        <label><span>Onglet par defaut</span><input type="text" formControlName="default_dashboard_tab" /></label>
+        <label><span>Elements par page</span><input type="number" formControlName="items_per_page" /></label>
+        <label class="inline-toggle">
+          <input type="checkbox" formControlName="show_stats_cards" />
+          <span>Afficher les stats</span>
+        </label>
+      </div>
+    </section>
+
+    <section class="settings-section" formGroupName="branding">
+      <div>
+        <h3>Branding</h3>
+        <p>Logo, couleur principale, image hero et description courte.</p>
+      </div>
+      <div class="settings-grid">
+        <label><span>Logo URL</span><input type="text" formControlName="logo_url" /></label>
+        <label><span>Couleur principale</span><input type="color" formControlName="primary_color" /></label>
+        <label><span>Hero image URL</span><input type="text" formControlName="hero_image_url" /></label>
+        <label class="full-field"><span>Description courte</span><textarea rows="3" formControlName="short_description"></textarea></label>
+      </div>
+    </section>
+
+    <div class="settings-actions">
+      <button class="button button-primary" type="submit" [disabled]="isSaving()">
+        {{ isSaving() ? 'Sauvegarde...' : 'Sauvegarder les parametres' }}
+      </button>
+    </div>
+  </form>
+</section>
